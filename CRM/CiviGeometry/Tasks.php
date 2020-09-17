@@ -24,6 +24,7 @@ class CRM_CiviGeometry_Tasks {
         ],
       ]);
       $geometry_ids = civicrm_api3('Geometry', 'contains', [
+        'options' => ['limit' => 0],
         'geometry_a' => 0,
         'geometry_b' => 'POINT(' . $address['geo_code_2'] . ' ' . $address['geo_code_1'] . ')',
       ])['values'];
