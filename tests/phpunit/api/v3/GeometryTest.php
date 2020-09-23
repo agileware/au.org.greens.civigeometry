@@ -17,7 +17,8 @@ use Civi\Test\HookInterface;
  *
  * @group headless
  */
-class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, HookInterface {
+class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, HookInterface
+{
 
   use \Civi\Test\Api3DocTrait;
   use \Civi\Test\GenericAssertionsTrait;
@@ -25,7 +26,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
 
   private $jsonDirectoryStore = __DIR__ . DIRECTORY_SEPARATOR . 'load';
 
-  public function setUpHeadless() {
+  public function setUpHeadless()
+  {
     // Civi\Test has many helpers, like install(), uninstall(), sql(), and sqlFile().
     // See: https://docs.civicrm.org/dev/en/latest/testing/phpunit/#civitest
     return \Civi\Test::headless()
@@ -33,7 +35,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
       ->apply();
   }
 
-  public function setUp() {
+  public function setUp()
+  {
     // Create a collection type for external collections
     $collectionTypeParams = [
       'label' => 'External',
@@ -66,7 +69,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
     parent::setUp();
   }
 
-  public function tearDown() {
+  public function tearDown()
+  {
     $this->callAPISuccess('GeometryType', 'delete', ['id' => $this->stateGeometryType['id']]);
     $this->callAPISuccess('GeometryCollection', 'delete', ['id' => $this->statesCollection['id']]);
     $this->callAPISuccess('GeometryType', 'delete', ['id' => $this->sa1GeometryType['id']]);
@@ -79,7 +83,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
    * Test Creating a geometry in the database.
    * Ensure that we can handle passing an array of collection ids and that we require at least one collection, a geometry type and that the geometry is specified.
    */
-  public function testCreateGeometry() {
+  public function testCreateGeometry()
+  {
     // Load geoJSON file and create a geometry
     $sa1JSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'sample_sa1_geometry.json');
     // Create SA1 Geometry
@@ -127,7 +132,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test that the gZip libary works
    */
-  public function testGzipExtension() {
+  public function testGzipExtension()
+  {
     $gziped = gzencode('hello');
     $this->assertEquals('hello', gzdecode($gziped));
   }
@@ -135,7 +141,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test creating geometry using gzip data
    */
-  public function testCreateGzipedGeometry() {
+  public function testCreateGzipedGeometry()
+  {
     $geometryJSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'sample_sa1_geometry.json');
     $geometryJSONForGzipping = str_replace('"', "'", $geometryJSON);
     $gzipedGeometryJSON = gzencode($geometryJSONForGzipping);
@@ -159,7 +166,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test creating geometry using a specified file as the geometry.
    */
-  public function testCreateGeometryFromFile() {
+  public function testCreateGeometryFromFile()
+  {
     // Create a collection
     $collectionParams = [
       'label' => 'NSW Branches',
@@ -192,7 +200,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
    * Verify that MySQL/MariaDB is not using the Minimum Bounding Rectangle rather using the actual geometry
    * when determining if a point is withing the geometry
    */
-  public function testMySQLSTContains() {
+  public function testMySQLSTContains()
+  {
     // Create a collection
     $UHCollectionParams = [
       'label' => 'Tasmanian Upper House',
@@ -277,7 +286,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
    * Test removing collection fails when geometry only belongs in one collection.
    * This is expected to fail as geometry has to be in a collection.
    */
-  public function testRemoveOnlyCollection() {
+  public function testRemoveOnlyCollection()
+  {
     $UHCollectionParams = [
       'label' => 'Tasmanian Upper House',
       'source' => 'TasEC',
@@ -312,7 +322,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Remove a Geometry from an collection when the Geometry is in Multiple collections.
    */
-  public function testRemoveCollection() {
+  public function testRemoveCollection()
+  {
     // Create Upper house Geometry
     $collectionParams = [
       'label' => 'Tasmanian Upper House',
@@ -355,7 +366,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test get Geometry Centroid.
    */
-  public function testGetGeometryCentroid() {
+  public function testGetGeometryCentroid()
+  {
     // Create Upper House Geometry Collection
     $collectionParams = [
       'label' => 'Tas Upper House Districts',
@@ -388,7 +400,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test Archiving a Geometry
    */
-  public function testArchiveGeometry() {
+  public function testArchiveGeometry()
+  {
     // Create Collection for archiving geometry
     $collectionParams = [
       'label' => 'Queensland Wards',
@@ -421,7 +434,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test Unarchiving a Geometry.
    */
-  public function testUnArchiveGeometry() {
+  public function testUnArchiveGeometry()
+  {
     // Create a collection for our wards
     $collectionParams = [
       'label' => 'Queensland Wards',
@@ -462,7 +476,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test get intersection
    */
-  public function testGetIntersection() {
+  public function testGetIntersection()
+  {
     $queenslandJSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'queensland.json');
     // Create Queensland state geometry
     $queensland = $this->callAPISuccess('Geometry', 'create', [
@@ -509,7 +524,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test Generating an Overlap Cache.
    */
-  public function testOverlapGenerationCache() {
+  public function testOverlapGenerationCache()
+  {
     $queenslandJSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'queensland.json');
     // Create Queensland state geometry
     $queensland = $this->callAPISuccess('Geometry', 'create', [
@@ -579,7 +595,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test Generating an Overlap between 2 specific geometries is within 97 and 100%
    */
-  public function testOverlapGeneration() {
+  public function testOverlapGeneration()
+  {
     $sa1JSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'sample_sa1_geometry.json');
     // Create SA1 Geometry
     $sa1 = $this->callAPISuccess('Geometry', 'create', [
@@ -629,51 +646,11 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   }
 
   /**
-   * Test Generating an Overlap between 2 specific geometries is within 97 and 100%
-   */
-  public function testOverlapGeneration() {
-    $sa1JSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'sample_sa1_geometry.json');
-    // Create SA1 Geometry
-    $sa1 = $this->callAPISuccess('Geometry', 'create', [
-      'label' => 'sample_sa1_geometry',
-      'geometry_type_id' => $this->sa1GeometryType['id'],
-      'collection_id' => [$this->sa1Collection['id']],
-      'geometry' => trim($sa1JSON),
-    ]);
-    // Create Collection for QLD Wards
-    $wardsCollection = $this->callAPISuccess('GeometryCollection', 'create', [
-      'label' => 'Queensland Wards',
-      'source' => 'QLD',
-      'geometry_collection_type_id' => $this->externalCollectionType['id'],
-    ]);
-    // Greate Geometry try
-    $wardGeometryType = $this->callAPISuccess('GeometryType', 'create', [
-      'label' => 'LGA Wards',
-    ]);
-    $cairnsJSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'sample_qld_ward_geometry.json');
-    // Create ward Geometry
-    $cairns = $this->callAPISuccess('Geometry', 'create', [
-      'label' => 'Sample Queensland Ward',
-      'geometry_type_id' => $wardGeometryType['id'],
-      'collection_id' => [$wardsCollection['id']],
-      'geometry' => trim($cairnsJSON),
-    ]);
-    $overlapResult = $this->callAPISuccess('Geometry', 'getoverlap', [
-      'geometry_id_a' => $sa1['id'],
-      'geometry_id_b' => $cairns['id'],
-    ]);
-    $this->assertEquals(0, $overlapResult['values'][$overlapResult['id']]['overlap']);
-    $this->callAPISuccess('Geometry', 'delete', ['id' => $cairns['id']]);
-    $this->callAPISuccess('Geometry', 'delete', ['id' => $sa1['id']]);
-    $this->callAPISuccess('GeometryType', 'delete', ['id' => $wardGeometryType['id']]);
-    $this->callAPISuccess('GeometryCollection', 'delete', ['id' => $wardsCollection['id']]);
-  }
-
-  /**
    * Test getting a distance
    * @note Postgres reported 2,202 metres here however MySQL5.7 using native functions returned 2,197
    */
-  public function testGetDistance() {
+  public function testGetDistance()
+  {
     $result = $this->callAPISuccess('Geometry', 'getdistance', [
       'geometry_a' => 'POINT(147.2687833 -42.9771098)',
       'geometry_b' => 'POINT(147.243 -42.983)',
@@ -684,7 +661,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test returning spatial properties for a geometry
    */
-  public function testSpatialDataProperties() {
+  public function testSpatialDataProperties()
+  {
     // Create a collection
     $collectionParams = [
       'label' => 'NSW Branches',
@@ -735,7 +713,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test returning geometry in KML format
    */
-  public function testCustomOutputFormat() {
+  public function testCustomOutputFormat()
+  {
     $geometryJSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'sample_sa1_geometry.json');
     $geometry = $this->callAPISuccess('Geometry', 'create', [
       'label' => 'sample_sa1_geometry',
@@ -744,15 +723,18 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
       'geometry' => $geometryJSON,
     ]);
     $getGeometry = $this->callAPISuccess('Geometry', 'get', ['format' => 'kml']);
-    $this->assertEquals('<MultiGeometry><Polygon><outerBoundaryIs><LinearRing><coordinates>151.18540272,-33.8022812055 151.185615104,-33.8022131255 151.186521952,-33.802339499 151.18660944,-33.8023522825 151.186400992,-33.8033745925 151.18620336,-33.8043426235 151.185657952,-33.8071025645 151.184443328,-33.806932827 151.184176192,-33.8065670635 151.183489312,-33.807019851 151.183223648,-33.807194824 151.18304544,-33.806998983 151.18288128,-33.8068107085 151.182722176,-33.806619178 151.18257024,-33.8064241509999 151.18244352,-33.8062482715 151.182426976,-33.8062253315 151.182289088,-33.806014191 151.182224928,-33.805905744 151.18216128,-33.8057982035 151.182068416,-33.8056292245 151.182040672,-33.805578775 151.18192512,-33.805357478 151.181736832,-33.8049863125 151.181663776,-33.8048362775001 151.181523008,-33.804534339 151.18145568,-33.804382491 151.181874016,-33.8041690195 151.18220064,-33.803836038 151.1829096,-33.8033327825 151.183241152,-33.8031041595 151.18357392,-33.8028830105 151.183727808,-33.802830822 151.184271168,-33.8026439905 151.18540272,-33.8022812055 </coordinates></LinearRing></outerBoundaryIs></Polygon></MultiGeometry>',
-      $getGeometry['values'][$getGeometry['id']]['geometry']);
+    $this->assertEquals(
+      '<MultiGeometry><Polygon><outerBoundaryIs><LinearRing><coordinates>151.18540272,-33.8022812055 151.185615104,-33.8022131255 151.186521952,-33.802339499 151.18660944,-33.8023522825 151.186400992,-33.8033745925 151.18620336,-33.8043426235 151.185657952,-33.8071025645 151.184443328,-33.806932827 151.184176192,-33.8065670635 151.183489312,-33.807019851 151.183223648,-33.807194824 151.18304544,-33.806998983 151.18288128,-33.8068107085 151.182722176,-33.806619178 151.18257024,-33.8064241509999 151.18244352,-33.8062482715 151.182426976,-33.8062253315 151.182289088,-33.806014191 151.182224928,-33.805905744 151.18216128,-33.8057982035 151.182068416,-33.8056292245 151.182040672,-33.805578775 151.18192512,-33.805357478 151.181736832,-33.8049863125 151.181663776,-33.8048362775001 151.181523008,-33.804534339 151.18145568,-33.804382491 151.181874016,-33.8041690195 151.18220064,-33.803836038 151.1829096,-33.8033327825 151.183241152,-33.8031041595 151.18357392,-33.8028830105 151.183727808,-33.802830822 151.184271168,-33.8026439905 151.18540272,-33.8022812055 </coordinates></LinearRing></outerBoundaryIs></Polygon></MultiGeometry>',
+      $getGeometry['values'][$getGeometry['id']]['geometry']
+    );
     $this->callAPISuccess('Geometry', 'delete', ['id' => $geometry['id']]);
   }
 
   /**
    * Test that requesting only specific parameters you only get those paremters back
    */
-  public function testGeometryReturnParams() {
+  public function testGeometryReturnParams()
+  {
     $geometryJSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'sample_sa1_geometry.json');
     $geometry = $this->callAPISuccess('Geometry', 'create', [
       'label' => 'sample_sa1_geometry',
@@ -776,7 +758,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
    * Verify that MySQL/MariaDB is not using the Minimum Bounding Rectangle rather using the actual geometry
    * when determining if a point is withing the geometry
    */
-  public function testGeometryAddressStorage() {
+  public function testGeometryAddressStorage()
+  {
     // Create a collection
     $UHCollectionParams = [
       'label' => 'Tasmanian Upper House',
@@ -839,7 +822,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test being able return a list of Adddresses for a Geometry
    */
-  public function testgetAddressGeometry() {
+  public function testgetAddressGeometry()
+  {
     $timestart = microtime(TRUE);
     // Create a collection
     $UHCollectionParams = [
@@ -905,7 +889,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test being able return a list of Addresses for a Geometry
    */
-  public function testAddressGeometryCacheisUpdatedAfterGeometryisCreated() {
+  public function testAddressGeometryCacheisUpdatedAfterGeometryisCreated()
+  {
     // Create a collection
     $UHCollectionParams = [
       'label' => 'Tasmanian Upper House',
@@ -968,7 +953,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test Creating an Entity Relationship between a contact and Geometry.
    */
-  public function testCreateRelationshipBetweenContactAndGeometry() {
+  public function testCreateRelationshipBetweenContactAndGeometry()
+  {
     // Create a collection
     $UHCollectionParams = [
       'label' => 'Tasmanian Upper House',
@@ -1015,7 +1001,8 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test finding geometry ids that are within 5 KM of the a specific point
    */
-  public function testGetNearestGeometry() {
+  public function testGetNearestGeometry()
+  {
     // Create a collection
     $collectionParams = [
       'label' => 'NSW Branches',
@@ -1067,5 +1054,4 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
     $this->callAPISuccess('GeometryType', 'delete', ['id' => $branchGeometryType['id']]);
     $this->callAPISuccess('GeometryCollection', 'delete', ['id' => $NSWBranchesCollection['id']]);
   }
-
 }
