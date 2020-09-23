@@ -557,10 +557,23 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
       'overlap' => 10,
     ]);
     $this->assertTrue(empty($cacheResutlMinOverlap['values']));
+
+    // Check that when a geometry is archived, all overlap cache entries are removed
+    $this->callAPISuccess('Geometry', 'archive', ['id' => $cairns['id']]);
+    $overlapCacheEntries = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civigeometry_geometry_overlap_cache WHERE geometry_a_id = %1 OR geometry_b_id = %1", [1 => $cairns['id']]);
+    $this->assertEquals(0, $overlapCacheEntries);
+    // Check that when a geometry is unarchived, all overlap cache entries are recreated
+    $this->callAPISuccess('Geometry', 'unarchive', ['id' => $cairns['id']]);
+    $overlapCacheEntries = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civigeometry_geometry_overlap_cache WHERE geometry_a_id = %1 OR geometry_b_id = %1", [1 => $cairns['id']]);
+    $this->assertTrue($overlapCacheEntries);
+
+    // Clean up and check that when a geometry is deleted, all overlap cache entries are removed
     $this->callAPISuccess('Geometry', 'delete', ['id' => $cairns['id']]);
     $this->callAPISuccess('Geometry', 'delete', ['id' => $queensland['id']]);
     $this->callAPISuccess('GeometryType', 'delete', ['id' => $wardGeometryType['id']]);
     $this->callAPISuccess('GeometryCollection', 'delete', ['id' => $wardsCollection['id']]);
+    $overlapCacheEntries = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civigeometry_geometry_overlap_cache WHERE geometry_a_id = %1 OR geometry_b_id = %1", [1 => $cairns['id']]);
+    $this->assertFalse($overlapCacheEntries);
   }
 
   /**
