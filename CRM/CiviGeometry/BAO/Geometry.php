@@ -185,6 +185,7 @@ class CRM_CiviGeometry_BAO_Geometry extends CRM_CiviGeometry_DAO_Geometry {
     $instance->is_archived = 1;
     $instance->archived_date = date('Ymdhis');
     $instance->save();
+    clearOverlapCache($params);
     CRM_Utils_Hook::post('archive', 'Geometry', $instance->id, $instance);
     return $instance;
   }
@@ -322,6 +323,18 @@ class CRM_CiviGeometry_BAO_Geometry extends CRM_CiviGeometry_DAO_Geometry {
     }
     return [];
   }
+
+  /**
+   * Clear Overlap Cache for a single geometry
+   * @param array $params
+   * @return bool
+   */
+  public static function clearOverlapCache($params) {
+    return CRM_Core_DAO::executeQuery("
+      DELETE FROM civigeometry_geometry_overlap_cache
+      WHERE geometry_a_id = %1 OR geometry_b_id = %1", [
+        1 => [$params['id'], 'Positive'],
+      ]);
 
   /**
    * Calculate distance between 2 points

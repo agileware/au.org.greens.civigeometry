@@ -631,7 +631,7 @@ class api_v3_GeometryTest extends \PHPUnit\Framework\TestCase implements Headles
   /**
    * Test Generating an Overlap between 2 specific geometries is within 97 and 100%
    */
-  public function test0OverlapGeneration() {
+  public function testOverlapGeneration() {
     $sa1JSON = file_get_contents(\CRM_Utils_File::addTrailingSlash($this->jsonDirectoryStore) . 'sample_sa1_geometry.json');
     // Create SA1 Geometry
     $sa1 = $this->callAPISuccess('Geometry', 'create', [
