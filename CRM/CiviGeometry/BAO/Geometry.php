@@ -335,6 +335,7 @@ class CRM_CiviGeometry_BAO_Geometry extends CRM_CiviGeometry_DAO_Geometry {
       WHERE geometry_a_id = %1 OR geometry_b_id = %1", [
         1 => [$params['id'], 'Positive'],
       ]);
+  }
 
   /**
    * Calculate distance between 2 points
